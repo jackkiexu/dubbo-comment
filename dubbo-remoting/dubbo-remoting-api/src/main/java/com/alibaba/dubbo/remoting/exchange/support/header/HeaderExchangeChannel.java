@@ -111,7 +111,7 @@ final class HeaderExchangeChannel implements ExchangeChannel {
         try {
             channel.send(req);
         } catch (RemotingException e) {
-            future.cancel();
+            future.cancel();                // 这一步非常重要, 没有这一步直接会导致内存溢出
             throw e;
         }
         return future;

@@ -30,6 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
+ * 参考地址
  * ConsistentHashLoadBalance
  *
  * @author william.liangf

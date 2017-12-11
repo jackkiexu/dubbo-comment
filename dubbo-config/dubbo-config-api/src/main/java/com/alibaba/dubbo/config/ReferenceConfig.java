@@ -423,7 +423,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
             logger.info("Refer dubbo service " + interfaceClass.getName() + " from url " + invoker.getUrl());
         }
         // 创建服务代理
-        return (T) proxyFactory.getProxy(invoker);
+        return (T) proxyFactory.getProxy(invoker);                              // ProxyFactory$Adaptive
     }
 
     private void checkDefault() {

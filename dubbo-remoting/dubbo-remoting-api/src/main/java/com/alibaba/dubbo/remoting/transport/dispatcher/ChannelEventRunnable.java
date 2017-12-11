@@ -78,7 +78,7 @@ public class ChannelEventRunnable implements Runnable {
                 break;
             case RECEIVED:
                 try {
-                    handler.received(channel, message);
+                    handler.received(channel, message);                     // DecodeHandler
                 } catch (Exception e) {
                     logger.warn("ChannelEventRunnable handle " + state + " operation error, channel is " + channel
                             + ", message is " + message, e);

@@ -36,7 +36,7 @@ public final class DubboCountCodec implements Codec2 {
     private DubboCodec codec = new DubboCodec();
 
     public void encode(Channel channel, ChannelBuffer buffer, Object msg) throws IOException {
-        codec.encode(channel, buffer, msg);
+        codec.encode(channel, buffer, msg);                                 // DubboCodec
     }
 
     public Object decode(Channel channel, ChannelBuffer buffer) throws IOException {

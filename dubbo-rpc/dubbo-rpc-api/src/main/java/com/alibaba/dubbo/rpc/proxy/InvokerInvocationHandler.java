@@ -49,7 +49,7 @@ public class InvokerInvocationHandler implements InvocationHandler {
         if ("equals".equals(methodName) && parameterTypes.length == 1) {
             return invoker.equals(args[0]);
         }
-        return invoker.invoke(new RpcInvocation(method, args)).recreate();
+        return invoker.invoke(new RpcInvocation(method, args)).recreate();                      // MockClusterInvoker
     }
 
 }

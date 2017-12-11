@@ -291,7 +291,7 @@ public class RegistryProtocol implements Protocol {
                 Constants.PROVIDERS_CATEGORY
                         + "," + Constants.CONFIGURATORS_CATEGORY
                         + "," + Constants.ROUTERS_CATEGORY));
-        return cluster.join(directory);
+        return cluster.join(directory);                                                         // 这里返回 FailoverClusterInvoker
     }
 
     public void destroy() {

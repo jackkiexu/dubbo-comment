@@ -389,7 +389,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
             }
 
             if (urls.size() == 1) {
-                invoker = refprotocol.refer(interfaceClass, urls.get(0));
+                invoker = refprotocol.refer(interfaceClass, urls.get(0));               // Protocol$Adaptive   // 这里是 注册 zookeeper, 返回的是 FailoverClusterInvoker
             } else {
                 List<Invoker<?>> invokers = new ArrayList<Invoker<?>>();
                 URL registryURL = null;

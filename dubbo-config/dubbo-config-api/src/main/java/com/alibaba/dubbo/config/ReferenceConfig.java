@@ -181,6 +181,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
     }
 
     private void init() {
+        System.out.println("********************* ReferenceConfig init() ***************");
         if (initialized) {
             return;
         }

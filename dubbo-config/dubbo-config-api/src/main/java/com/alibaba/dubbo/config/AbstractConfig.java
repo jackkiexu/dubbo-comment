@@ -470,7 +470,8 @@ public abstract class AbstractConfig implements Serializable {
                             && isPrimitive(method.getReturnType())) {
                         int i = name.startsWith("get") ? 3 : 2;
                         String key = name.substring(i, i + 1).toLowerCase() + name.substring(i + 1);
-                        Object value = method.invoke(this, new Object[0]);
+//                        Object value = method.invoke(this, new Object[0]);
+                        Object value = new Object();
                         if (value != null) {
                             buf.append(" ");
                             buf.append(key);

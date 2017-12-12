@@ -131,7 +131,7 @@ final class NettyCodecAdapter {
                 do {
                     saveReaderIndex = message.readerIndex();
                     try {
-                        msg = codec.decode(channel, message);
+                        msg = codec.decode(channel, message);                   // DubboCountCodec
                     } catch (IOException e) {
                         buffer = com.alibaba.dubbo.remoting.buffer.ChannelBuffers.EMPTY_BUFFER;
                         throw e;

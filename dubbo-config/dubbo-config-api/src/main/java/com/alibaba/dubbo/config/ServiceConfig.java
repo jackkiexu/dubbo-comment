@@ -494,7 +494,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                         }
                         if (logger.isInfoEnabled()) {
                             logger.info("Register dubbo service " + interfaceClass.getName() + " url " + url + " to registry " + registryURL);
-                        }
+                        }                   // ProxyFactory$Adaptive
                         Invoker<?> invoker = proxyFactory.getInvoker(ref, (Class) interfaceClass, registryURL.addParameterAndEncoded(Constants.EXPORT_KEY, url.toFullString()));
 
                         Exporter<?> exporter = protocol.export(invoker);
@@ -518,8 +518,8 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                     .setProtocol(Constants.LOCAL_PROTOCOL)
                     .setHost(LOCALHOST)
                     .setPort(0);
-            Exporter<?> exporter = protocol.export(
-                    proxyFactory.getInvoker(ref, (Class) interfaceClass, local));
+            Exporter<?> exporter = protocol.export(                                                             // Protocol$Adaptive
+                    proxyFactory.getInvoker(ref, (Class) interfaceClass, local));                           // ProxyFactory$Adaptive, 其中 的 ref 就是 service 对应的实现类
             exporters.add(exporter);
             logger.info("Export dubbo service " + interfaceClass.getName() + " to local registry");
         }

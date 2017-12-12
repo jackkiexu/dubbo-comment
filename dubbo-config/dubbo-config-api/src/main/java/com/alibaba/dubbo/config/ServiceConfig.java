@@ -471,7 +471,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                     .getExtension(url.getProtocol()).getConfigurator(url).configure(url);
         }
 
-        String scope = url.getParameter(Constants.SCOPE_KEY);
+        String scope = url.getParameter(Constants.SCOPE_KEY);                           // 这里的 scope 是 null, 所以暴露 本地 与 远程
         //配置为none不暴露
         if (!Constants.SCOPE_NONE.toString().equalsIgnoreCase(scope)) {
 
@@ -494,7 +494,10 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                         }
                         if (logger.isInfoEnabled()) {
                             logger.info("Register dubbo service " + interfaceClass.getName() + " url " + url + " to registry " + registryURL);
-                        }                   // ProxyFactory$Adaptive
+                        }
+                        /** 1. 通过 JavassistProxyFactory 将具体的实现类包装成 AbstractProxyInvoker 实例
+                         *  2. DubboProtocol 将上述的 AbstractProxyInvoker 实例转成 DubboExporter (下面 registryURL 中的 parameter 里面的 export 就是 url)
+                         */
                         Invoker<?> invoker = proxyFactory.getInvoker(ref, (Class) interfaceClass, registryURL.addParameterAndEncoded(Constants.EXPORT_KEY, url.toFullString()));
 
                         Exporter<?> exporter = protocol.export(invoker);
@@ -518,6 +521,9 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                     .setProtocol(Constants.LOCAL_PROTOCOL)
                     .setHost(LOCALHOST)
                     .setPort(0);
+            /** 1. JavassistProxyFactory(默认) 将具体的实现类包装成 AbstractProxyInvoker 实例
+             *  2. InjvmProtocol 将上述的 AbstractProxyInvoker 实例转换成 InjvmExporter
+             */
             Exporter<?> exporter = protocol.export(                                                             // Protocol$Adaptive
                     proxyFactory.getInvoker(ref, (Class) interfaceClass, local));                           // ProxyFactory$Adaptive, 其中 的 ref 就是 service 对应的实现类
             exporters.add(exporter);

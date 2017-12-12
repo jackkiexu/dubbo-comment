@@ -327,7 +327,7 @@ public class ExtensionLoader<T> {
      */
     public T getDefaultExtension() {
         getExtensionClasses();
-        if (null == cachedDefaultName || cachedDefaultName.length() == 0
+        if (null == cachedDefaultName || cachedDefaultName.length() == 0            // 这里的 cachedDefaultName 是 SPI 注解中的名称
                 || "true".equals(cachedDefaultName)) {
             return null;
         }
@@ -578,7 +578,7 @@ public class ExtensionLoader<T> {
                     throw new IllegalStateException("more than 1 default extension name on extension " + type.getName()
                             + ": " + Arrays.toString(names));
                 }
-                if (names.length == 1) cachedDefaultName = names[0];
+                if (names.length == 1) cachedDefaultName = names[0];        // 在接口上打上 SPI 标签, 标签中的名字就是默认的 实现类
             }
         }
 
@@ -759,7 +759,7 @@ public class ExtensionLoader<T> {
 
             Adaptive adaptiveAnnotation = method.getAnnotation(Adaptive.class);
             StringBuilder code = new StringBuilder(512);
-            if (adaptiveAnnotation == null) {
+            if (adaptiveAnnotation == null) {                                   // 从这里看出, 只有被 Adaptive 修饰的类, 才会在 Adaptive 对应类中通过 ExtensionLoader 加载出来
                 code.append("throw new UnsupportedOperationException(\"method ")
                         .append(method.toString()).append(" of interface ")
                         .append(type.getName()).append(" is not adaptive method!\");");

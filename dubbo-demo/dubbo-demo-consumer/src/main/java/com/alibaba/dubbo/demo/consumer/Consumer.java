@@ -16,21 +16,16 @@ public class Consumer {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"META-INF/spring/dubbo-demo-consumer.xml"});
         context.start();
 
-        for(int i = 0; i < 100000000; i++){
-            try {
-                DemoService demoService = (DemoService) context.getBean("demoService"); // 获取远程服务代理
-                String hello = demoService.sayHello("world"); // 执行远程方法
+        DemoService demoService = (DemoService) context.getBean("demoService"); // 获取远程服务代理
+        String hello = demoService.sayHello("world"); // 执行远程方法
 
-                System.out.println(hello + ", " + new Date()); // 显示调用结果
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } catch (BeansException e) {
-                e.printStackTrace();
-            }
+        System.out.println(hello + ", 1" + new Date()); // 显示调用结果
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        System.out.println(hello + ", 2" + new Date()); // 显示调用结果
 
     }
 }

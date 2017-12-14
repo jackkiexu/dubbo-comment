@@ -1,13 +1,8 @@
 package com.alibaba.dubbo.rpc;
 
-/**
- * Created by xjk on 12/10/17.
- */
-
 import com.alibaba.dubbo.common.extension.ExtensionLoader;
 
 public class ProxyFactory$Adaptive implements com.alibaba.dubbo.rpc.ProxyFactory {
-
     public java.lang.Object getProxy(com.alibaba.dubbo.rpc.Invoker arg0) throws com.alibaba.dubbo.rpc.RpcException {
         if (arg0 == null) throw new IllegalArgumentException("com.alibaba.dubbo.rpc.Invoker argument == null");
         if (arg0.getUrl() == null)

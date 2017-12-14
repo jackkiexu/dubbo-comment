@@ -36,14 +36,14 @@ public final class DubboCountCodec implements Codec2 {
     private DubboCodec codec = new DubboCodec();
 
     public void encode(Channel channel, ChannelBuffer buffer, Object msg) throws IOException {
-        codec.encode(channel, buffer, msg);
+        codec.encode(channel, buffer, msg);                                 // DubboCodec
     }
 
     public Object decode(Channel channel, ChannelBuffer buffer) throws IOException {
         int save = buffer.readerIndex();
         MultiMessage result = MultiMessage.create();
         do {
-            Object obj = codec.decode(channel, buffer);
+            Object obj = codec.decode(channel, buffer);                         // DubboCodec
             if (Codec2.DecodeResult.NEED_MORE_INPUT == obj) {
                 buffer.readerIndex(save);
                 break;

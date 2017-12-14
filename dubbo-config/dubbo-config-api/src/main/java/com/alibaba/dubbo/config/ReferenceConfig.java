@@ -181,6 +181,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
     }
 
     private void init() {
+        System.out.println("********************* ReferenceConfig init() ***************");
         if (initialized) {
             return;
         }
@@ -388,7 +389,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
             }
 
             if (urls.size() == 1) {
-                invoker = refprotocol.refer(interfaceClass, urls.get(0));
+                invoker = refprotocol.refer(interfaceClass, urls.get(0));               // Protocol$Adaptive   // 这里是 注册 zookeeper, 返回的是 FailoverClusterInvoker
             } else {
                 List<Invoker<?>> invokers = new ArrayList<Invoker<?>>();
                 URL registryURL = null;
@@ -422,7 +423,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
             logger.info("Refer dubbo service " + interfaceClass.getName() + " from url " + invoker.getUrl());
         }
         // 创建服务代理
-        return (T) proxyFactory.getProxy(invoker);
+        return (T) proxyFactory.getProxy(invoker);                              // ProxyFactory$Adaptive
     }
 
     private void checkDefault() {

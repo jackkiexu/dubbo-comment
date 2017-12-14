@@ -75,6 +75,9 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
         return SPRING_CONTEXT;
     }
 
+    /** 1. 通过 ApplicationContextAware 回调接口, 将 applicationContext 设置到 ServiceBean,
+     *
+     */
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         SpringExtensionFactory.addApplicationContext(applicationContext);

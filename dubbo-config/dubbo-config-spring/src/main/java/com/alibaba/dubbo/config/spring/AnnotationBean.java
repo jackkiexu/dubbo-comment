@@ -127,7 +127,7 @@ public class AnnotationBean extends AbstractConfig implements DisposableBean, Be
 
     public Object postProcessAfterInitialization(Object bean, String beanName)
             throws BeansException {
-        if (!isMatchPackage(bean)) {
+        if (!isMatchPackage(bean)) {                                            // 检测是不是 dubbo 注册扫描的类
             return bean;
         }
         Service service = bean.getClass().getAnnotation(Service.class);

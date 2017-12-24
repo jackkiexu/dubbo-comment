@@ -21,6 +21,9 @@ import com.alibaba.dubbo.rpc.RpcContext;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.alibaba.dubbo.config.annotation.Service;
+
+@Service
 public class DemoServiceImpl implements DemoService {
 
     public String sayHello(String name) {

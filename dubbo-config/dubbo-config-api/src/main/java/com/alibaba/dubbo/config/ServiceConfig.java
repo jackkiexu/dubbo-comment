@@ -518,7 +518,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     private void exportLocal(URL url) {
         if (!Constants.LOCAL_PROTOCOL.equalsIgnoreCase(url.getProtocol())) {
             URL local = URL.valueOf(url.toFullString())
-                    .setProtocol(Constants.LOCAL_PROTOCOL)
+                    .setProtocol(Constants.LOCAL_PROTOCOL)                  // 这里就进行转协议, 变成 InjvmProtocol
                     .setHost(LOCALHOST)
                     .setPort(0);
             /** 1. JavassistProxyFactory(默认) 将具体的实现类包装成 AbstractProxyInvoker 实例

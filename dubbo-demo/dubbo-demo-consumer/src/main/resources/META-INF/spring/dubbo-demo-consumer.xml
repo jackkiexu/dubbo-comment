@@ -24,10 +24,10 @@
     <dubbo:application name="demo-consumer"/>
 
     <!-- 使用multicast广播注册中心暴露发现服务地址 -->
-    <dubbo:registry address="zookeeper://192.168.0.65:2181"/>
+    <dubbo:registry address="zookeeper://192.168.1.250:2181"/>
 
     <!-- 生成远程服务代理，可以和本地bean一样使用demoService -->
-    <dubbo:reference id="demoService" check="false" interface="com.alibaba.dubbo.demo.DemoService" version="1.0.1">
+    <dubbo:reference id="demoService" check="false" interface="com.alibaba.dubbo.demo.DemoService">
     </dubbo:reference>
 
 </beans>

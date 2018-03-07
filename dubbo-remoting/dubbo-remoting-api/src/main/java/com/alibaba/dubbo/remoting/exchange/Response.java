@@ -44,7 +44,7 @@ public class Response {
 
     /**
      * request format error.
-     */
+     */ // 处理请求 broken 时返回这个状态值
     public static final byte BAD_REQUEST = 40;
 
     /**
@@ -59,7 +59,7 @@ public class Response {
 
     /**
      * service error.
-     */
+     */  // 若在出现 编解码出错, 则报这个错
     public static final byte SERVICE_ERROR = 70;
 
     /**

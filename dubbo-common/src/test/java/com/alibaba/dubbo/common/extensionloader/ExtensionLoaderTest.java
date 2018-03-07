@@ -17,6 +17,7 @@ package com.alibaba.dubbo.common.extensionloader;
 
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
+import com.alibaba.dubbo.common.extension.ExtensionFactory;
 import com.alibaba.dubbo.common.extension.ExtensionLoader;
 import com.alibaba.dubbo.common.extensionloader.activate.ActivateExt1;
 import com.alibaba.dubbo.common.extensionloader.activate.impl.ActivateExt1Impl1;
@@ -66,6 +67,27 @@ import static org.junit.matchers.JUnitMatchers.containsString;
  * @author ding.lid
  */
 public class ExtensionLoaderTest {
+
+    @Test
+    public void test_getExtensionLoader_ExtensionFactory() throws Exception {
+        try {
+            ExtensionFactory extensionFactory = ExtensionLoader.getExtensionLoader(ExtensionFactory.class).getAdaptiveExtension();
+        } catch (IllegalArgumentException expected) {
+            assertThat(expected.getMessage(),
+                    containsString("Extension type == null"));
+        }
+    }
+
+    @Test
+    public void test_getExtensionLoader_ExtensionFactory_defaultExtension() throws Exception {
+        try {
+            ExtensionFactory extensionFactory = ExtensionLoader.getExtensionLoader(ExtensionFactory.class).getDefaultExtension();
+        } catch (IllegalArgumentException expected) {
+            assertThat(expected.getMessage(),
+                    containsString("Extension type == null"));
+        }
+    }
+
     @Test
     public void test_getExtensionLoader_Null() throws Exception {
         try {

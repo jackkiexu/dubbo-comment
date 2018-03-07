@@ -58,6 +58,7 @@ public class ReferenceBean<T> extends ReferenceConfig<T> implements FactoryBean,
 
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+        // 将 ApplicationContext 设置到 SpringExtensionFactory 中
         SpringExtensionFactory.addApplicationContext(applicationContext);
     }
 

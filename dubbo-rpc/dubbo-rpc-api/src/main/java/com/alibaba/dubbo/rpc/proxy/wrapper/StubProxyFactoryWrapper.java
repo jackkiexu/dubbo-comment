@@ -39,7 +39,7 @@ import java.lang.reflect.Constructor;
  *
  * @author william.liangf
  */
-public class StubProxyFactoryWrapper implements ProxyFactory {
+public class StubProxyFactoryWrapper implements ProxyFactory {  // ProxyFactory 的一个装饰器类
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StubProxyFactoryWrapper.class);
 
@@ -100,7 +100,7 @@ public class StubProxyFactoryWrapper implements ProxyFactory {
         return proxy;
     }
 
-    public <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url) throws RpcException {
+    public <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url) throws RpcException {  // 获取对 impl 做统一封装的 AbstractProxyInvoker
         return proxyFactory.getInvoker(proxy, type, url);
     }
 

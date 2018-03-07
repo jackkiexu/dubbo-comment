@@ -39,7 +39,7 @@ import java.net.InetSocketAddress;
 final class HeaderExchangeChannel implements ExchangeChannel {
 
     private static final Logger logger = LoggerFactory.getLogger(HeaderExchangeChannel.class);
-
+    // HeaderExchangeChannel 放入 channel 里面的 key
     private static final String CHANNEL_KEY = HeaderExchangeChannel.class.getName() + ".CHANNEL";
 
     private final Channel channel;
@@ -53,7 +53,7 @@ final class HeaderExchangeChannel implements ExchangeChannel {
         this.channel = channel;
     }
 
-    static HeaderExchangeChannel getOrAddChannel(Channel ch) {
+    static HeaderExchangeChannel getOrAddChannel(Channel ch) { // 获取 channel 对应的 HeaderExchangeChannel, 所有对channel的操作都在 HeaderExchangeChannel, 相当于一个代理类
         if (ch == null) {
             return null;
         }
@@ -61,7 +61,7 @@ final class HeaderExchangeChannel implements ExchangeChannel {
         if (ret == null) {
             ret = new HeaderExchangeChannel(ch);
             if (ch.isConnected()) {
-                ch.setAttribute(CHANNEL_KEY, ret);
+                ch.setAttribute(CHANNEL_KEY, ret);  // 构造一个 HeaderExchangeChannel 放入 channel 里面
             }
         }
         return ret;

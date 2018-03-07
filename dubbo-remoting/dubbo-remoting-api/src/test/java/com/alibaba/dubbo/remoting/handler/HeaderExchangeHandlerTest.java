@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class HeaderExchangeHandlerTest {
 
     @Test
-    public void test_received_request_oneway() throws RemotingException {
+    public void test_received_request_oneway() throws RemotingException { // 测试单向数据的传输
         final Channel mchannel = new MockedChannel();
 
         final Person requestdata = new Person("charles");
@@ -52,7 +52,7 @@ public class HeaderExchangeHandlerTest {
     }
 
     @Test
-    public void test_received_request_twoway() throws RemotingException {
+    public void test_received_request_twoway() throws RemotingException { // 测试双向数据的传输
         final Person requestdata = new Person("charles");
         final Request request = new Request();
         request.setTwoWay(true);

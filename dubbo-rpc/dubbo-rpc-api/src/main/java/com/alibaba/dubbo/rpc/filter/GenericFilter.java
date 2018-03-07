@@ -57,6 +57,7 @@ public class GenericFilter implements Filter {
             String[] types = (String[]) inv.getArguments()[1];
             Object[] args = (Object[]) inv.getArguments()[2];
             try {
+                // 获取接口的方法
                 Method method = ReflectUtils.findMethodByMethodSignature(invoker.getInterface(), name, types);
                 Class<?>[] params = method.getParameterTypes();
                 if (args == null) {
@@ -103,6 +104,7 @@ public class GenericFilter implements Filter {
                         }
                     }
                 }
+                // 封装 RpcInvocation
                 Result result = invoker.invoke(new RpcInvocation(method, args, inv.getAttachments()));
                 if (result.hasException()
                         && !(result.getException() instanceof GenericException)) {

@@ -154,7 +154,7 @@ public class DubboProtocol extends AbstractProtocol {
         INSTANCE = this;
     }
 
-    public static DubboProtocol getDubboProtocol() {
+    public static DubboProtocol getDubboProtocol() {  // 默认通过 Dubbo 的 SPI 机制获取 DubboProtocol
         if (INSTANCE == null) {
             ExtensionLoader.getExtensionLoader(Protocol.class).getExtension(DubboProtocol.NAME); // load
         }
@@ -181,7 +181,7 @@ public class DubboProtocol extends AbstractProtocol {
                         .equals(NetUtils.filterLocalHost(address.getAddress().getHostAddress()));
     }
 
-    Invoker<?> getInvoker(Channel channel, Invocation inv) throws RemotingException {
+    Invoker<?> getInvoker(Channel channel, Invocation inv) throws RemotingException { // 获取 DubboExporter 对应的 invoker
         boolean isCallBackServiceInvoke = false;
         boolean isStubServiceInvoke = false;
         int port = channel.getLocalAddress().getPort();

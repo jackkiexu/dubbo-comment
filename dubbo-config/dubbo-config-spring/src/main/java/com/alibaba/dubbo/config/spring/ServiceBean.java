@@ -80,6 +80,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
      */
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+        // 将 ApplicationContext 增加到 SpringExtensionFactory 中
         SpringExtensionFactory.addApplicationContext(applicationContext);
         if (applicationContext != null) {
             SPRING_CONTEXT = applicationContext;

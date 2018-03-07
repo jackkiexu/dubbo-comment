@@ -162,7 +162,7 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
             return new RpcResult(e);
         }
     }
-
+    // 进行正真的激活 Invocation
     protected abstract Result doInvoke(Invocation invocation) throws Throwable;
 
 }

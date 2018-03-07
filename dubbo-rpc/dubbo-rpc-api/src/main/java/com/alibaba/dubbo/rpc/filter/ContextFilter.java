@@ -46,9 +46,9 @@ public class ContextFilter implements Filter {
             attachments.remove(Constants.DUBBO_VERSION_KEY);
             attachments.remove(Constants.TOKEN_KEY);
             attachments.remove(Constants.TIMEOUT_KEY);
-            attachments.remove(Constants.ASYNC_KEY);//清空消费端的异步参数
+            attachments.remove(Constants.ASYNC_KEY); //清空消费端的异步参数
         }
-        RpcContext.getContext()
+        RpcContext.getContext()                      // 将调用的常规信息封装到 RpcContext 中
                 .setInvoker(invoker)
                 .setInvocation(invocation)
                 .setAttachments(attachments)
@@ -60,7 +60,7 @@ public class ContextFilter implements Filter {
         try {
             return invoker.invoke(invocation);
         } finally {
-            RpcContext.removeContext();
+            RpcContext.removeContext();  // 从 ThreadLocal 中清除 RpcContext
         }
     }
 }

@@ -40,7 +40,7 @@ public class Request {
     private boolean mTwoWay = true;
 
     private boolean mEvent = false;
-
+    // 表示消息是否被处理过, 在处理的过程中 出了异常, 设置 mBroken = true
     private boolean mBroken = false;
 
     private Object mData;
@@ -94,7 +94,7 @@ public class Request {
         return mEvent;
     }
 
-    public void setEvent(String event) {
+    public void setEvent(String event) { // 比如设置 Request.READONLY_EVENT
         mEvent = true;
         mData = event;
     }

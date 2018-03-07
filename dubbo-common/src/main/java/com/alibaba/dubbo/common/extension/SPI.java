@@ -54,7 +54,7 @@ import java.lang.annotation.Target;
 public @interface SPI {
 
     /**
-     * 缺省扩展点名。
+     * 缺省扩展点名。通过这个名称从 META-INF.dubbo.internal 中获取 value 对应的实现 class 类
      */
     String value() default "";
 

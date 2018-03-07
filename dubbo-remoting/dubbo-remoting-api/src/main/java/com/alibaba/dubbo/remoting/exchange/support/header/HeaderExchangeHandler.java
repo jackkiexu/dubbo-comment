@@ -78,8 +78,8 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
     }
 
     Response handleRequest(ExchangeChannel channel, Request req) throws RemotingException {
-        Response res = new Response(req.getId(), req.getVersion());
-        if (req.isBroken()) {
+        Response res = new Response(req.getId(), req.getVersion());  // 构建返回值的 Response
+        if (req.isBroken()) {                   // 请求是否破损, 就是在处理请求时是否出异常
             Object data = req.getData();
 
             String msg;
@@ -92,14 +92,14 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
             return res;
         }
         // find handler by message class.
-        Object msg = req.getData();
+        Object msg = req.getData();   // 获取请求发来的消息
         try {
             // handle data.
-            Object result = handler.reply(channel, msg);
-            res.setStatus(Response.OK);
-            res.setResult(result);
+            Object result = handler.reply(channel, msg); // 这里就是 DubboProtocol.ExchangeHandler 来进行处理业务逻辑
+            res.setStatus(Response.OK);                  // 设置请求处理的状态
+            res.setResult(result);                       // 设置请求的应答值
         } catch (Throwable e) {
-            res.setStatus(Response.SERVICE_ERROR);
+            res.setStatus(Response.SERVICE_ERROR);       // 若处理出错, 则在这里设置
             res.setErrorMessage(StringUtils.toString(e));
         }
         return res;
@@ -157,23 +157,23 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
     }
 
     public void received(Channel channel, Object message) throws RemotingException {
-        channel.setAttribute(KEY_READ_TIMESTAMP, System.currentTimeMillis());
-        ExchangeChannel exchangeChannel = HeaderExchangeChannel.getOrAddChannel(channel);
+        channel.setAttribute(KEY_READ_TIMESTAMP, System.currentTimeMillis());           // 设置读取数据的时间戳
+        ExchangeChannel exchangeChannel = HeaderExchangeChannel.getOrAddChannel(channel); // 获取 channel 对应的 HeaderExchangeChannel
         try {
-            if (message instanceof Request) {
+            if (message instanceof Request) {          // 请求处理器
                 // handle request.
                 Request request = (Request) message;
-                if (request.isEvent()) {
-                    handlerEvent(channel, request);
+                if (request.isEvent()) {               // 请求的消息类型, 是否是事件
+                    handlerEvent(channel, request);    // 这里没看到什么处理
                 } else {
-                    if (request.isTwoWay()) {
-                        Response response = handleRequest(exchangeChannel, request);
+                    if (request.isTwoWay()) {          // 是单|双向发送数据
+                        Response response = handleRequest(exchangeChannel, request);  // 处理请求的事件
                         channel.send(response);
-                    } else {
-                        handler.received(exchangeChannel, request.getData());
+                    } else {                           // 只是单纯的接受数据
+                        handler.received(exchangeChannel, request.getData()); // 这里的 handler 一般就是  DubboProtocol.ExchangeHandler
                     }
                 }
-            } else if (message instanceof Response) {                                       // �ͻ��˽�����Ӧ��Ϣ(�첽תͬ��)
+            } else if (message instanceof Response) {  // 返回值处理 客户端接收响应信息(异步转同步)
                 handleResponse(channel, (Response) message);
             } else if (message instanceof String) {
                 if (isClientSide(channel)) {
@@ -189,7 +189,7 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
                 handler.received(exchangeChannel, message);
             }
         } finally {
-            HeaderExchangeChannel.removeChannelIfDisconnected(channel);
+            HeaderExchangeChannel.removeChannelIfDisconnected(channel);  // 存储的是 HeaderExchangeChannel
         }
     }
 

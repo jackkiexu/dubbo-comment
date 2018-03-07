@@ -26,10 +26,10 @@ public class Protocol$Adaptive implements com.alibaba.dubbo.rpc.Protocol {
         if (arg0.getUrl() == null)
             throw new IllegalArgumentException("com.alibaba.dubbo.rpc.Invoker argument getUrl() == null");
         com.alibaba.dubbo.common.URL url = arg0.getUrl();
-        String extName = (url.getProtocol() == null ? "dubbo" : url.getProtocol());
+        String extName = (url.getProtocol() == null ? "dubbo" : url.getProtocol());  // 获取默认的 协议名称
         if (extName == null)
             throw new IllegalStateException("Fail to get extension(com.alibaba.dubbo.rpc.Protocol) name from url(" + url.toString() + ") use keys([protocol])");
         com.alibaba.dubbo.rpc.Protocol extension = (com.alibaba.dubbo.rpc.Protocol) ExtensionLoader.getExtensionLoader(com.alibaba.dubbo.rpc.Protocol.class).getExtension(extName);
-        return extension.export(arg0);
+        return extension.export(arg0);  // 获取 ProtocolFilterWrapper
     }
 }

@@ -25,7 +25,7 @@ import java.util.Map;
  * @serial Don't change the class name and package name.
  * @see com.alibaba.dubbo.rpc.Invoker#invoke(Invocation)
  * @see com.alibaba.dubbo.rpc.RpcInvocation
- */
+ */ // 其实可以实现一个 MethodInvocation 可以实现 around 类型的切面
 public interface Invocation {
 
     /**

@@ -32,11 +32,13 @@ import com.alibaba.dubbo.rpc.RpcException;
 public class ClassLoaderFilter implements Filter {
 
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+        // 获取当前线程所属的 classLoader
         ClassLoader ocl = Thread.currentThread().getContextClassLoader();
+        // 将创建 Interface 的 classLoader 设置到当前线程的 classLoader
         Thread.currentThread().setContextClassLoader(invoker.getInterface().getClassLoader());
         try {
             return invoker.invoke(invocation);
-        } finally {
+        } finally {  // 恢复原先的 classLoader
             Thread.currentThread().setContextClassLoader(ocl);
         }
     }

@@ -76,7 +76,7 @@ public class Transporters {
         return getTransporter().connect(url, handler);
     }
 
-    public static Transporter getTransporter() {
+    public static Transporter getTransporter() {  // 获取默认的 Transporter
         return ExtensionLoader.getExtensionLoader(Transporter.class).getAdaptiveExtension();
     }
 

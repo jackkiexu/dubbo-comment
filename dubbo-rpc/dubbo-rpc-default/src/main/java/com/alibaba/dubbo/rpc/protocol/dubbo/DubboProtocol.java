@@ -55,7 +55,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author william.liangf
  * @author chao.liuc
  */
-public class DubboProtocol extends AbstractProtocol {
+public class DubboProtocol extends AbstractProtocol { // 这个 Dubbo 其实在整个 Dubbo 服务中就一个 实例
 
     public static final String NAME = "dubbo";
 
@@ -219,9 +219,9 @@ public class DubboProtocol extends AbstractProtocol {
         URL url = invoker.getUrl();
 
         // export service.
-        String key = serviceKey(url);
+        String key = serviceKey(url);   // 获取请求的接口名称
         DubboExporter<T> exporter = new DubboExporter<T>(invoker, key, exporterMap);
-        exporterMap.put(key, exporter);
+        exporterMap.put(key, exporter); // 将 interfaceName <--> DubboExporter
 
         //export an stub service for dispaching event
         Boolean isStubSupportEvent = url.getParameter(Constants.STUB_EVENT_KEY, Constants.DEFAULT_STUB_EVENT);
@@ -245,13 +245,13 @@ public class DubboProtocol extends AbstractProtocol {
 
     private void openServer(URL url) {
         // find server.
-        String key = url.getAddress();
+        String key = url.getAddress();  // 获取服务端的地址 (PS: 主要是端口不一样)
         //client 也可以暴露一个只有server可以调用的服务。
-        boolean isServer = url.getParameter(Constants.IS_SERVER_KEY, true);
+        boolean isServer = url.getParameter(Constants.IS_SERVER_KEY, true); // 获取参数, 判断是否是 服务端
         if (isServer) {
-            ExchangeServer server = serverMap.get(key);
+            ExchangeServer server = serverMap.get(key); // 通过服务端地址从 serverMap 获取 Server
             if (server == null) {
-                serverMap.put(key, createServer(url));
+                serverMap.put(key, createServer(url));  // 根据地址创建 Server
             } else {
                 //server支持reset,配合override功能使用
                 server.reset(url);
@@ -262,17 +262,17 @@ public class DubboProtocol extends AbstractProtocol {
     private ExchangeServer createServer(URL url) {
         //默认开启server关闭时发送readonly事件
         url = url.addParameterIfAbsent(Constants.CHANNEL_READONLYEVENT_SENT_KEY, Boolean.TRUE.toString());
-        //默认开启heartbeat
+        //默认开启heartbeat 默认 60 秒
         url = url.addParameterIfAbsent(Constants.HEARTBEAT_KEY, String.valueOf(Constants.DEFAULT_HEARTBEAT));
-        String str = url.getParameter(Constants.SERVER_KEY, Constants.DEFAULT_REMOTING_SERVER);
+        String str = url.getParameter(Constants.SERVER_KEY, Constants.DEFAULT_REMOTING_SERVER); // 获取 Transporter 的默认实现, 一般是 netty
 
-        if (str != null && str.length() > 0 && !ExtensionLoader.getExtensionLoader(Transporter.class).hasExtension(str))
+        if (str != null && str.length() > 0 && !ExtensionLoader.getExtensionLoader(Transporter.class).hasExtension(str)) // 判断是否有 netty Transporter
             throw new RpcException("Unsupported server type: " + str + ", url: " + url);
 
-        url = url.addParameter(Constants.CODEC_KEY, DubboCodec.NAME);
+        url = url.addParameter(Constants.CODEC_KEY, DubboCodec.NAME); // 从 ExtensionLoader 中获取 Codec (编解码器)
         ExchangeServer server;
         try {
-            server = Exchangers.bind(url, requestHandler);
+            server = Exchangers.bind(url, requestHandler);  // 使用 ExchangeHandler
         } catch (RemotingException e) {
             throw new RpcException("Fail to start server(url: " + url + ") " + e.getMessage(), e);
         }
@@ -306,7 +306,7 @@ public class DubboProtocol extends AbstractProtocol {
         ExchangeClient[] clients = new ExchangeClient[connections];
         for (int i = 0; i < clients.length; i++) {
             if (service_share_connect) {
-                clients[i] = getSharedClient(url);
+                clients[i] = getSharedClient(url);  // 创建共享的 Client  <-- 蛮复杂的
             } else {
                 clients[i] = initClient(url);
             }
@@ -319,7 +319,7 @@ public class DubboProtocol extends AbstractProtocol {
      */
     private ExchangeClient getSharedClient(URL url) {
         String key = url.getAddress();
-        ReferenceCountExchangeClient client = referenceClientMap.get(key);
+        ReferenceCountExchangeClient client = referenceClientMap.get(key);  // 根据连接地址获取对应的 ExchangeClient
         if (client != null) {
             if (!client.isClosed()) {
                 client.incrementAndGetCount();

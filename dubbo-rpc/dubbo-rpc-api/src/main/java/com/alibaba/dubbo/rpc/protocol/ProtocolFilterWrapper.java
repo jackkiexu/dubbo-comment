@@ -54,7 +54,7 @@ public class ProtocolFilterWrapper implements Protocol {
             for (int i = filters.size() - 1; i >= 0; i--) {
                 final Filter filter = filters.get(i);
                 final Invoker<T> next = last;  // 这里就是将所有的 Filter 组装成一个链表, 而上面的 AbstractProxyInvoker 则是最后一个 invoker
-                last = new Invoker<T>() {
+                last = new Invoker<T>() {      // 将所有的 filter 都放入 Invoker 中, 并且赋值为 last 节点(这个 last 节点其实也是整条链表上的头节点)
 
                     public Class<T> getInterface() {
                         return invoker.getInterface();
@@ -83,7 +83,7 @@ public class ProtocolFilterWrapper implements Protocol {
                 };
             }
         }
-        return last;
+        return last;  // 返回链表的头节点
     }
 
     public int getDefaultPort() {
@@ -93,7 +93,7 @@ public class ProtocolFilterWrapper implements Protocol {
     public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {  // 这里暴露的是 AbstractProxyInvoker
         if (Constants.REGISTRY_PROTOCOL.equals(invoker.getUrl().getProtocol())) {
             return protocol.export(invoker);
-        }
+        }    // 这里的 protocol 是 DubboProtocol  (PS: buildInvokerChain 构建 filter1 -> filter2 -> AbstractProxyInvoker)
         return protocol.export(buildInvokerChain(invoker, Constants.SERVICE_FILTER_KEY, Constants.PROVIDER));
     }
 

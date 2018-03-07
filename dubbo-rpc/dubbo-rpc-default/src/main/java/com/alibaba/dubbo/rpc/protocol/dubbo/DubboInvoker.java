@@ -69,9 +69,9 @@ public class DubboInvoker<T> extends AbstractInvoker<T> {
     @Override
     protected Result doInvoke(final Invocation invocation) throws Throwable {
         RpcInvocation inv = (RpcInvocation) invocation;
-        final String methodName = RpcUtils.getMethodName(invocation);
-        inv.setAttachment(Constants.PATH_KEY, getUrl().getPath());
-        inv.setAttachment(Constants.VERSION_KEY, version);
+        final String methodName = RpcUtils.getMethodName(invocation); // 获取方法名称
+        inv.setAttachment(Constants.PATH_KEY, getUrl().getPath());    // 设置请求的路径 <-- 其实就是 接口
+        inv.setAttachment(Constants.VERSION_KEY, version);            // attachment 版本的信息
 
         ExchangeClient currentClient;
         if (clients.length == 1) {
@@ -94,7 +94,7 @@ public class DubboInvoker<T> extends AbstractInvoker<T> {
                 return new RpcResult();
             } else {                // 默认
                 RpcContext.getContext().setFuture(null);
-                return (Result) currentClient.request(inv, timeout).get();
+                return (Result) currentClient.request(inv, timeout).get();  // 这里的 currentClient 是 HeaderExchangeClient
             }
         } catch (TimeoutException e) {
             throw new RpcException(RpcException.TIMEOUT_EXCEPTION, "Invoke remote method timeout. method: " + invocation.getMethodName() + ", provider: " + getUrl() + ", cause: " + e.getMessage(), e);

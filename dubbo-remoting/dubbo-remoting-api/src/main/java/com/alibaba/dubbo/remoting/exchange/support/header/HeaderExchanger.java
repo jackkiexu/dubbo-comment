@@ -16,7 +16,9 @@
 package com.alibaba.dubbo.remoting.exchange.support.header;
 
 import com.alibaba.dubbo.common.URL;
+import com.alibaba.dubbo.remoting.Client;
 import com.alibaba.dubbo.remoting.RemotingException;
+import com.alibaba.dubbo.remoting.Server;
 import com.alibaba.dubbo.remoting.Transporters;
 import com.alibaba.dubbo.remoting.exchange.ExchangeClient;
 import com.alibaba.dubbo.remoting.exchange.ExchangeHandler;
@@ -34,11 +36,29 @@ public class HeaderExchanger implements Exchanger {
     public static final String NAME = "header";
 
     public ExchangeClient connect(URL url, ExchangeHandler handler) throws RemotingException {
-        return new HeaderExchangeClient(Transporters.connect(url, new DecodeHandler(new HeaderExchangeHandler(handler))), true);
+
+        HeaderExchangeHandler headerExchangeHandler = new HeaderExchangeHandler(handler);
+
+        DecodeHandler decodeHandler = new DecodeHandler(headerExchangeHandler);
+
+        Client client = Transporters.connect(url, decodeHandler);
+
+        HeaderExchangeClient headerExchangeClient = new HeaderExchangeClient(client, true);
+
+        return headerExchangeClient;
     }
 
     public ExchangeServer bind(URL url, ExchangeHandler handler) throws RemotingException {
-        return new HeaderExchangeServer(Transporters.bind(url, new DecodeHandler(new HeaderExchangeHandler(handler))));
+
+        HeaderExchangeHandler headerExchangeHandler = new HeaderExchangeHandler(handler);
+
+        DecodeHandler decodeHandler = new DecodeHandler(headerExchangeHandler);
+
+        Server server = Transporters.bind(url, decodeHandler);
+
+        HeaderExchangeServer headerExchangeServer = new HeaderExchangeServer(server);
+
+        return headerExchangeServer;
     }
 
 }

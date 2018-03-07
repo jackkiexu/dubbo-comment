@@ -49,7 +49,7 @@ public class DefaultFuture implements ResponseFuture {
 
     private static final Map<Long, DefaultFuture> FUTURES = new ConcurrentHashMap<Long, DefaultFuture>();
 
-    static {
+    static { //  线程超时控制机制, 开启一个线程, 不断扫描对应的数据, 然后进行操作
         Thread th = new Thread(new RemotingInvocationTimeoutScan(), "DubboResponseTimeoutScanTimer");
         th.setDaemon(true);
         th.start();
@@ -68,13 +68,13 @@ public class DefaultFuture implements ResponseFuture {
     private volatile ResponseCallback callback;
 
     public DefaultFuture(Channel channel, Request request, int timeout) {
-        this.channel = channel;
-        this.request = request;
-        this.id = request.getId();
-        this.timeout = timeout > 0 ? timeout : channel.getUrl().getPositiveParameter(Constants.TIMEOUT_KEY, Constants.DEFAULT_TIMEOUT);
+        this.channel = channel;         // 这里的 channel 是 NettyClient
+        this.request = request;         // 请求对象 Request
+        this.id = request.getId();      // 设置请求的序列号 ID
+        this.timeout = timeout > 0 ? timeout : channel.getUrl().getPositiveParameter(Constants.TIMEOUT_KEY, Constants.DEFAULT_TIMEOUT); // 超时事时间设置, 默认 1秒
         // put into waiting map.
-        FUTURES.put(id, this);
-        CHANNELS.put(id, channel);
+        FUTURES.put(id, this);          // 将所有的请求放入 ConcurrentHashMap 中
+        CHANNELS.put(id, channel);      // 将 请求 id <--> NettyClient 放入 ConcurrentHashMap 中
     }
 
     public static DefaultFuture getFuture(long id) {
@@ -276,12 +276,12 @@ public class DefaultFuture implements ResponseFuture {
                 + " -> " + channel.getRemoteAddress();
     }
 
-    private static class RemotingInvocationTimeoutScan implements Runnable {
+    private static class RemotingInvocationTimeoutScan implements Runnable {  // 线程超时控制机制, 开启一个线程, 不断扫描对应的数据, 然后进行操作
 
         public void run() {
             while (true) {
                 try {
-                    for (DefaultFuture future : FUTURES.values()) {
+                    for (DefaultFuture future : FUTURES.values()) {  // TODO 需要考虑这里是否有并发的问题
                         if (future == null || future.isDone()) {
                             continue;
                         }

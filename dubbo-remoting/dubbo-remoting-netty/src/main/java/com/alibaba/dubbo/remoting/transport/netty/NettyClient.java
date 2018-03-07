@@ -156,7 +156,7 @@ public class NettyClient extends AbstractClient {
 
     @Override
     protected com.alibaba.dubbo.remoting.Channel getChannel() {
-        Channel c = channel;
+        Channel c = channel;        // NioClientSocketChannel
         if (c == null || !c.isConnected())
             return null;
         return NettyChannel.getOrAddChannel(c, getUrl(), this);

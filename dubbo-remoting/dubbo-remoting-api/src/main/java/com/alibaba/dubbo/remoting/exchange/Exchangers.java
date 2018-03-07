@@ -68,7 +68,9 @@ public class Exchangers {
             throw new IllegalArgumentException("handler == null");
         }
         url = url.addParameterIfAbsent(Constants.CODEC_KEY, "exchange");
-        return getExchanger(url).bind(url, handler);
+        Exchanger exchanger = getExchanger(url);
+        ExchangeServer exchangeServer = exchanger.bind(url, handler);
+        return exchangeServer;
     }
 
     public static ExchangeClient connect(String url) throws RemotingException {
@@ -111,11 +113,11 @@ public class Exchangers {
     }
 
     public static Exchanger getExchanger(URL url) {
-        String type = url.getParameter(Constants.EXCHANGER_KEY, Constants.DEFAULT_EXCHANGER);
+        String type = url.getParameter(Constants.EXCHANGER_KEY, Constants.DEFAULT_EXCHANGER);  // 默认的 Exchanger
         return getExchanger(type);
     }
 
-    public static Exchanger getExchanger(String type) {
+    public static Exchanger getExchanger(String type) {   // 获取默认的 Exchanger = header
         return ExtensionLoader.getExtensionLoader(Exchanger.class).getExtension(type);
     }
 

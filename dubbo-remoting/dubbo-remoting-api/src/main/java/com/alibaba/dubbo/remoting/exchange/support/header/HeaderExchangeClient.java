@@ -85,7 +85,7 @@ public class HeaderExchangeClient implements ExchangeClient {
     }
 
     public ResponseFuture request(Object request, int timeout) throws RemotingException {
-        return channel.request(request, timeout);
+        return channel.request(request, timeout);  // 这里的 channel 是 HeaderExchangeChannel
     }
 
     public ChannelHandler getChannelHandler() {

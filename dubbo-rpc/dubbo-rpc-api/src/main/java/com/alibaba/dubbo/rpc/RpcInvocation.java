@@ -41,7 +41,7 @@ public class RpcInvocation implements Invocation, Serializable {
     private Object[] arguments;
 
     private Map<String, String> attachments;
-
+    // 这里的 transient 表示不会被序列化, 也就是这个 invoker 不会被传输到 Server 端
     private transient Invoker<?> invoker;
 
     public RpcInvocation() {
@@ -80,7 +80,7 @@ public class RpcInvocation implements Invocation, Serializable {
                 invocation.getArguments(), invocation.getAttachments(), invocation.getInvoker());
     }
 
-    public RpcInvocation(Method method, Object[] arguments) {
+    public RpcInvocation(Method method, Object[] arguments) {  // 对 方法 + 参数类型 + 参数 的一个封装
         this(method.getName(), method.getParameterTypes(), arguments, null, null);
     }
 
@@ -97,11 +97,11 @@ public class RpcInvocation implements Invocation, Serializable {
     }
 
     public RpcInvocation(String methodName, Class<?>[] parameterTypes, Object[] arguments, Map<String, String> attachments, Invoker<?> invoker) {
-        this.methodName = methodName;
-        this.parameterTypes = parameterTypes == null ? new Class<?>[0] : parameterTypes;
-        this.arguments = arguments == null ? new Object[0] : arguments;
-        this.attachments = attachments == null ? new HashMap<String, String>() : attachments;
-        this.invoker = invoker;
+        this.methodName = methodName;    // 设置方法名称
+        this.parameterTypes = parameterTypes == null ? new Class<?>[0] : parameterTypes;  // 设置参数类型
+        this.arguments = arguments == null ? new Object[0] : arguments;                   // 设置参数数组
+        this.attachments = attachments == null ? new HashMap<String, String>() : attachments; // 设置请求过程中 attachments 的数据
+        this.invoker = invoker;                                                           // 设置 invoker 对象
     }
 
     public Invoker<?> getInvoker() {

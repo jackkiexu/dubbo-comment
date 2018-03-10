@@ -125,11 +125,11 @@ public class Constants {
 
     public static final int DEFAULT_ACCEPTS = 0;
 
-    public static final int DEFAULT_IDLE_TIMEOUT = 600 * 1000;
+    public static final int DEFAULT_IDLE_TIMEOUT = 60 * 60 * 1000;
 
     public static final int DEFAULT_HEARTBEAT = 60 * 1000;
 
-    public static final int DEFAULT_TIMEOUT = 60 * 1000;
+    public static final int DEFAULT_TIMEOUT = 60 * 60 * 1000;
 
     public static final int DEFAULT_CONNECT_TIMEOUT = 3000;
 

@@ -26,7 +26,7 @@ import com.alibaba.dubbo.remoting.ChannelHandler;
 public class ChannelEventRunnable implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ChannelEventRunnable.class);
 
-    private final ChannelHandler handler;
+    private final ChannelHandler handler;    // DecodeHandler
     private final Channel channel;
     private final ChannelState state;
     private final Throwable exception;

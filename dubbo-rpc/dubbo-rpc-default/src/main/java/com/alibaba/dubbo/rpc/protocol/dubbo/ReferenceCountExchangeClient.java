@@ -75,7 +75,7 @@ final class ReferenceCountExchangeClient implements ExchangeClient {
     }
 
     public ResponseFuture request(Object request, int timeout) throws RemotingException {
-        return client.request(request, timeout);
+        return client.request(request, timeout);  // 这里的 client 是 HeaderExchangeClient
     }
 
     public boolean isConnected() {

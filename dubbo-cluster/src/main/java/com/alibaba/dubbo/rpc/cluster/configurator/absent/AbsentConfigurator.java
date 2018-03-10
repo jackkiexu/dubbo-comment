@@ -23,7 +23,7 @@ import com.alibaba.dubbo.rpc.cluster.configurator.AbstractConfigurator;
  *
  * @author william.liangf
  */
-public class AbsentConfigurator extends AbstractConfigurator {
+public class AbsentConfigurator extends AbstractConfigurator {  // Configurator: 配置, absent: 缺席, 缺少
 
     public AbsentConfigurator(URL url) {
         super(url);

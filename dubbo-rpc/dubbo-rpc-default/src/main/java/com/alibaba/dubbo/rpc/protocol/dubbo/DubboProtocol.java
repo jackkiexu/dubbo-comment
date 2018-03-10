@@ -181,11 +181,12 @@ public class DubboProtocol extends AbstractProtocol { // 这个 Dubbo 其实在�
                         .equals(NetUtils.filterLocalHost(address.getAddress().getHostAddress()));
     }
 
-    Invoker<?> getInvoker(Channel channel, Invocation inv) throws RemotingException { // 获取 DubboExporter 对应的 invoker
+    // 获取 DubboExporter 对应的 invoker
+    Invoker<?> getInvoker(Channel channel, Invocation inv) throws RemotingException {
         boolean isCallBackServiceInvoke = false;
         boolean isStubServiceInvoke = false;
         int port = channel.getLocalAddress().getPort();
-        String path = inv.getAttachments().get(Constants.PATH_KEY);
+        String path = inv.getAttachments().get(Constants.PATH_KEY);  // 这里的 path 其实就是 接口 -> 比如 com.alibaba.tuomatuo.user.service.userService
         //如果是客户端的回调服务.
         isStubServiceInvoke = Boolean.TRUE.toString().equals(inv.getAttachments().get(Constants.STUB_EVENT_KEY));
         if (isStubServiceInvoke) {
@@ -197,6 +198,7 @@ public class DubboProtocol extends AbstractProtocol { // 这个 Dubbo 其实在�
             path = inv.getAttachments().get(Constants.PATH_KEY) + "." + inv.getAttachments().get(Constants.CALLBACK_SERVICE_KEY);
             inv.getAttachments().put(IS_CALLBACK_SERVICE_INVOKE, Boolean.TRUE.toString());
         }
+        // 获取 DubboExporter 对应的 serviceKey
         String serviceKey = serviceKey(port, path, inv.getAttachments().get(Constants.VERSION_KEY), inv.getAttachments().get(Constants.GROUP_KEY));
 
         DubboExporter<?> exporter = (DubboExporter<?>) exporterMap.get(serviceKey);
@@ -215,6 +217,12 @@ public class DubboProtocol extends AbstractProtocol { // 这个 Dubbo 其实在�
         return DEFAULT_PORT;
     }
 
+    /** 进行服务的暴露
+     *  1. 将 AbstractProxyInvoker 包装成 DubboExporter
+     *  2. 将 接口 key, AbstractProxyInvoker 包裹成 DubboExporter
+     *  3. 将 key <--> DubboExporter 放入到 exporterMap
+     *  4. 通过 netty 进行服务端, 监听对应的接口
+     */
     public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
         URL url = invoker.getUrl();
 
@@ -243,6 +251,7 @@ public class DubboProtocol extends AbstractProtocol { // 这个 Dubbo 其实在�
         return exporter;
     }
 
+    // 通过 netty 进行服务端, 监听对应的接口
     private void openServer(URL url) {
         // find server.
         String key = url.getAddress();  // 获取服务端的地址 (PS: 主要是端口不一样)
@@ -259,6 +268,7 @@ public class DubboProtocol extends AbstractProtocol { // 这个 Dubbo 其实在�
         }
     }
 
+    // 使用 Netty 开启监听 服务端口, 返回 Server 对象
     private ExchangeServer createServer(URL url) {
         //默认开启server关闭时发送readonly事件
         url = url.addParameterIfAbsent(Constants.CHANNEL_READONLYEVENT_SENT_KEY, Boolean.TRUE.toString());
@@ -286,6 +296,14 @@ public class DubboProtocol extends AbstractProtocol { // 这个 Dubbo 其实在�
         return server;
     }
 
+    /**
+     *
+     * @param serviceType
+     * @param url  远程服务的URL地址
+     * @param <T>
+     * @return
+     * @throws RpcException
+     */
     public <T> Invoker<T> refer(Class<T> serviceType, URL url) throws RpcException {
         // create rpc invoker.
         DubboInvoker<T> invoker = new DubboInvoker<T>(serviceType, url, getClients(url), invokers);

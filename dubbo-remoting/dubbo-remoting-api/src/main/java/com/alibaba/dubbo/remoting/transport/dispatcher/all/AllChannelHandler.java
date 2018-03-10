@@ -37,7 +37,7 @@ public class AllChannelHandler extends WrappedChannelHandler {
 
     public void connected(Channel channel) throws RemotingException {
         ExecutorService cexecutor = getExecutorService();
-        try {
+        try {                                       // NettyChannel , DecodeHandler
             cexecutor.execute(new ChannelEventRunnable(channel, handler, ChannelState.CONNECTED));
         } catch (Throwable t) {
             throw new ExecutionException("connect event", channel, getClass() + " error when process connected event .", t);

@@ -48,7 +48,7 @@ public class ProtocolFilterWrapper implements Protocol {
         Invoker<T> last = invoker;
         List<Filter> filters = ExtensionLoader.getExtensionLoader(Filter.class).getActivateExtension(invoker.getUrl(), key, group);
         /** provider 默认是 ExceptionFilter -> TimeoutFilter -> TraceFilter -> ContextFilter -> GenericFilter -> ClassLoaderFilter -> EchoFilter -> AbstractProxytInvoker
-         *
+         *  consumer 默认是 ConsumerContextFilter -> FutureFilter -> DubboInvoker
          */
         if (filters.size() > 0) {
             for (int i = filters.size() - 1; i >= 0; i--) {

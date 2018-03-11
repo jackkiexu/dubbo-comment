@@ -73,6 +73,7 @@ public class NettyClient extends AbstractClient {
         final NettyHandler nettyHandler = new NettyHandler(getUrl(), this);
         bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
             public ChannelPipeline getPipeline() {
+                // 这里的 new 非常重要, 每次有新 Channel 连接时就创建一个 ChannelPipeline, 所以编解码那部分是线程安全的
                 NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl(), NettyClient.this);
                 ChannelPipeline pipeline = Channels.pipeline();
                 pipeline.addLast("decoder", adapter.getDecoder());

@@ -65,12 +65,22 @@ public class ConnectChannelHandlerTest extends WrappedChannelHandlerTest {
     public void test_Connect_Biz_Error() throws RemotingException {
         handler = new ConnectionOrderedChannelHandler(new BizChannelHander(true), url);
         handler.connected(new MockedChannel());
+        try {
+            Thread.sleep(10*1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test //biz error 不抛出到线程异常上来.
     public void test_Disconnect_Biz_Error() throws RemotingException {
         handler = new ConnectionOrderedChannelHandler(new BizChannelHander(true), url);
         handler.disconnected(new MockedChannel());
+        try {
+            Thread.sleep(10*1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test(expected = ExecutionException.class)

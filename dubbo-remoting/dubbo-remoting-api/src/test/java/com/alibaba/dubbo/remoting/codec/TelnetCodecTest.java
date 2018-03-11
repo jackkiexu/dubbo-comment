@@ -67,7 +67,7 @@ public class TelnetCodecTest {
         return channel;
     }
 
-    protected byte[] join(byte[] in1, byte[] in2) {
+    protected byte[] join(byte[] in1, byte[] in2) { // 将数据流合并起来
         byte[] ret = new byte[in1.length + in2.length];
         System.arraycopy(in1, 0, ret, 0, in1.length);
         System.arraycopy(in2, 0, ret, in1.length, in2.length);
@@ -76,16 +76,16 @@ public class TelnetCodecTest {
 
     protected byte[] objectToByte(Object obj) {
         byte[] bytes;
-        if (obj instanceof String) {
+        if (obj instanceof String) { // 若是 String, 则直接通过 getBytes
             bytes = ((String) obj).getBytes();
-        } else if (obj instanceof byte[]) {
+        } else if (obj instanceof byte[]) { // 若是 byte[], 则直接返回
             bytes = (byte[]) obj;
         } else {
             try {
                 //object to bytearray
                 ByteArrayOutputStream bo = new ByteArrayOutputStream();
                 ObjectOutputStream oo = new ObjectOutputStream(bo);
-                oo.writeObject(obj);
+                oo.writeObject(obj);        // 将对象转换成字节流
                 bytes = bo.toByteArray();
                 bo.close();
                 oo.close();
@@ -110,7 +110,7 @@ public class TelnetCodecTest {
     }
 
     protected void testDecode_assertEquals(byte[] request, Object ret, boolean isServerside) throws IOException {
-        //init channel
+        //init channel  isServerSide: 是否是服务端
         Channel channel = isServerside ? getServerSideChannel(url) : getCliendSideChannel(url);
         //init request string
         ChannelBuffer buffer = ChannelBuffers.wrappedBuffer(request);

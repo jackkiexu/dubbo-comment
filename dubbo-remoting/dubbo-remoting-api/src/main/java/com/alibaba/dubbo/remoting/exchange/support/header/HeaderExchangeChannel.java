@@ -109,7 +109,7 @@ final class HeaderExchangeChannel implements ExchangeChannel {
         req.setData(request);
         DefaultFuture future = new DefaultFuture(channel, req, timeout);  // 这里的 channel 是 NettyClient
         try {
-            channel.send(req);              // 这里的 channel 是 NettyClient, 最终调用的是 AbstractPeer -> AbstractClient ->
+            channel.send(req);              // 这里的 channel 是 NettyClient, 最终调用的是 AbstractPeer -> AbstractClient -> NettyChannel -> NioClientSocketChannel
         } catch (RemotingException e) {
             future.cancel();                // 这一步非常重要, 没有这一步直接会导致内存溢出
             throw e;

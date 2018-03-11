@@ -63,7 +63,7 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
         }
     }
 
-    private static boolean isClientSide(Channel channel) {
+    private static boolean isClientSide(Channel channel) {   // 判断是否是 client 端的 Channel
         InetSocketAddress address = channel.getRemoteAddress();
         URL url = channel.getUrl();
         return url.getPort() == address.getPort() &&
@@ -164,7 +164,7 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
                 // handle request.
                 Request request = (Request) message;
                 if (request.isEvent()) {               // 请求的消息类型, 是否是事件
-                    handlerEvent(channel, request);    // 这里没看到什么处理
+                    handlerEvent(channel, request);    // 这里没看到什么处理 <-- 一般就是心跳之类的处理
                 } else {
                     if (request.isTwoWay()) {          // 是单|双向发送数据
                         Response response = handleRequest(exchangeChannel, request);  // 处理请求的事件

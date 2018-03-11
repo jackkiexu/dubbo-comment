@@ -29,7 +29,7 @@ import com.alibaba.dubbo.rpc.RpcInvocation;
 /**
  * ConsumerContextInvokerFilter
  *
- * @author william.liangf
+ * @author william.liangf   将请求的 Invocation 放入到 ThreadLocal 中的 Filter
  */
 @Activate(group = Constants.CONSUMER, order = -10000)
 public class ConsumerContextFilter implements Filter {

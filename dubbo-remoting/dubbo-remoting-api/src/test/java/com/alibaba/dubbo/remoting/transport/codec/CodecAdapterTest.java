@@ -7,7 +7,7 @@ import org.junit.Before;
 /**
  * @author <a href="mailto:gang.lvg@taobao.com">kimi</a>
  */
-public class CodecAdapterTest extends ExchangeCodecTest {
+public class  CodecAdapterTest extends ExchangeCodecTest {
 
     @Before
     public void setUp() throws Exception {

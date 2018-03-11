@@ -41,7 +41,7 @@ public abstract class AbstractCodec implements Codec2 {
         if (channel != null && channel.getUrl() != null) {
             payload = channel.getUrl().getParameter(Constants.PAYLOAD_KEY, Constants.DEFAULT_PAYLOAD);
         }
-        if (payload > 0 && size > payload) {
+        if (payload > 0 && size > payload) { // 若数据包超过最大大小, 则报异常
             ExceedPayloadLimitException e = new ExceedPayloadLimitException("Data length too large: " + size + ", max payload: " + payload + ", channel: " + channel);
             logger.error(e);
             throw e;
@@ -53,15 +53,15 @@ public abstract class AbstractCodec implements Codec2 {
     }
 
     protected boolean isClientSide(Channel channel) {
-        String side = (String) channel.getAttribute(Constants.SIDE_KEY);
+        String side = (String) channel.getAttribute(Constants.SIDE_KEY);  // channel 是否是 client 端的
         if ("client".equals(side)) {
             return true;
         } else if ("server".equals(side)) {
             return false;
         } else {
-            InetSocketAddress address = channel.getRemoteAddress();
+            InetSocketAddress address = channel.getRemoteAddress();       // 通过 IP 地址进行比较
             URL url = channel.getUrl();
-            boolean client = url.getPort() == address.getPort()
+            boolean client = url.getPort() == address.getPort()           // 端口及 ip 相同
                     && NetUtils.filterLocalHost(url.getIp()).equals(
                     NetUtils.filterLocalHost(address.getAddress()
                             .getHostAddress()));

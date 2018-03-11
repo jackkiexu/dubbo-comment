@@ -68,7 +68,7 @@ public class DubboProtocol extends AbstractProtocol { // 这个 Dubbo 其实在�
     //consumer side export a stub service for dispatching event
     //servicekey-stubmethods
     private final ConcurrentMap<String, String> stubServiceMethodsMap = new ConcurrentHashMap<String, String>();
-    private ExchangeHandler requestHandler = new ExchangeHandlerAdapter() {
+    private ExchangeHandler requestHandler = new ExchangeHandlerAdapter() {  // 这里其实是个 ExchangeHandler 的适配器 <-- 接口适配器
 
         public Object reply(ExchangeChannel channel, Object message) throws RemotingException {
             if (message instanceof Invocation) {

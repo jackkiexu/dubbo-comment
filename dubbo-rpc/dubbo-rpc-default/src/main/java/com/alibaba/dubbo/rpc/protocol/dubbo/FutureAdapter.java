@@ -30,6 +30,8 @@ import java.util.concurrent.TimeoutException;
  * FutureAdapter
  *
  * @author william.liangf
+ *
+ * 这里的 FutureAdapter 其实就是 将 com.alibaba.dubbo.remoting.exchange.ResponseFuture 适配成 java.util.concurrent.Future
  */
 public class FutureAdapter<V> implements Future<V> {
 

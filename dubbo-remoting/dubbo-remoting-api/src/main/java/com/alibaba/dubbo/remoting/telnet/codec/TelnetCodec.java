@@ -92,7 +92,7 @@ public class TelnetCodec extends TransportCodec {
         int index = 0;
         for (int i = 0; i < message.length; i++) {
             byte b = message[i];
-            if (b == '\b') { // backspace
+            if (b == '\b') { // backspace    <-- 空格
                 if (index > 0) {
                     index--;
                 }
@@ -101,7 +101,7 @@ public class TelnetCodec extends TransportCodec {
                         index--;
                     }
                 }
-            } else if (b == 27) { // escape
+            } else if (b == 27) { // escape    关键字 -> Esc
                 if (i < message.length - 4 && message[i + 4] == 126) {
                     i = i + 4;
                 } else if (i < message.length - 3 && message[i + 3] == 126) {
@@ -164,11 +164,11 @@ public class TelnetCodec extends TransportCodec {
             return toString(message, getCharset(channel));
         }
         checkPayload(channel, readable);
-        if (message == null || message.length == 0) {
+        if (message == null || message.length == 0) {  // 若读取的包头是空, 则直接返回 DecodeResult.NEED_MORE_INPUT
             return DecodeResult.NEED_MORE_INPUT;
         }
 
-        if (message[message.length - 1] == '\b') { // Windows backspace echo
+        if (message[message.length - 1] == '\b') { // Windows backspace echo windows 环境的空格输出
             try {
                 boolean doublechar = message.length >= 3 && message[message.length - 3] < 0; // double byte char
                 channel.send(new String(doublechar ? new byte[]{32, 32, 8, 8} : new byte[]{32, 8}, getCharset(channel).name()));
@@ -247,13 +247,13 @@ public class TelnetCodec extends TransportCodec {
             }
         }
         byte[] enter = null;
-        for (Object command : ENTER) {
+        for (Object command : ENTER) {  // 10 | 10,13
             if (endsWith(message, (byte[]) command)) {
                 enter = (byte[]) command;
                 break;
             }
         }
-        if (enter == null) {
+        if (enter == null) {   // 没有收到任何数据
             return DecodeResult.NEED_MORE_INPUT;
         }
         LinkedList<String> history = (LinkedList<String>) channel.getAttribute(HISTORY_LIST_KEY);

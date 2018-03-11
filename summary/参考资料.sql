@@ -1,5 +1,19 @@
 1. 很系统的 dubbo 源码分析
-  http://www.cnblogs.com/java-zhao/category/1090034.html
+   http://www.cnblogs.com/java-zhao/category/1090034.html
+
+2. dubbo 架构分析
+   http://shiyanjun.cn/archives/325.html
+
+3. Messaging pattern(消息模型 --> Exchanger)
+   http://en.wikipedia.org/wiki/Message_Exchange_Pattern
+
+4. Dubbo 编解码流程, 沾包拆包
+   http://www.10tiao.com/html/240/201703/2649257161/1.html
+   https://juejin.im/entry/5a9400dcf265da4e8077d8a9
+
+
+
+
 
 
   消费者请求流程:

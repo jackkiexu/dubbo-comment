@@ -54,7 +54,7 @@ import static org.junit.Assert.fail;
  *         20 ok
  *         90 error?
  *         4-11 id (long)
- *         12 -15 datalength
+ *         12 -15 datalength            : 数据包的长度
  */
 public class ExchangeCodecTest extends TelnetCodecTest {
     // magic header.
@@ -79,7 +79,7 @@ public class ExchangeCodecTest extends TelnetCodecTest {
     private byte[] getRequestBytes(Object obj, byte[] header) throws IOException {
         // encode request data.
         UnsafeByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(1024);
-        ObjectOutput out = serialization.serialize(url, bos);
+        ObjectOutput out = serialization.serialize(url, bos);  // 通过序列化机制转化字节流
         out.writeObject(obj);
 
         out.flushBuffer();
@@ -87,7 +87,7 @@ public class ExchangeCodecTest extends TelnetCodecTest {
         bos.close();
         byte[] data = bos.toByteArray();
         byte[] len = Bytes.int2bytes(data.length);
-        System.arraycopy(len, 0, header, 12, 4);
+        System.arraycopy(len, 0, header, 12, 4);  //  拷贝数据从 12 开始的4个字节
         byte[] request = join(header, data);
         return request;
     }
@@ -187,7 +187,7 @@ public class ExchangeCodecTest extends TelnetCodecTest {
         //00000010-response/oneway/hearbeat=false/hessian |20-stats=ok|id=0|length=0
         byte[] header = new byte[]{MAGIC_HIGH, MAGIC_LOW, 2, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         Person person = new Person();
-        byte[] request = getRequestBytes(person, header);
+        byte[] request = getRequestBytes(person, header);  // 合并包头和包体的数据
 
         Response obj = (Response) decode(request);
         Assert.assertEquals(20, obj.getStatus());

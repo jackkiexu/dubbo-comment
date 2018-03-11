@@ -100,7 +100,7 @@ final class NettyCodecAdapter {
             }
 
             ChannelBuffer input = (ChannelBuffer) o;
-            int readable = input.readableBytes();
+            int readable = input.readableBytes();  // 判断是否 ChannelBuffer 有可读的数据
             if (readable <= 0) {
                 return;
             }
@@ -111,10 +111,14 @@ final class NettyCodecAdapter {
                     buffer.writeBytes(input.toByteBuffer());
                     message = buffer;
                 } else {
+                    // 计算上次 channel 读取的数据 + 这次 ChannelBuffer 的数据
                     int size = buffer.readableBytes() + input.readableBytes();
+                    // 进行动态分配 ChannelBuffer
                     message = com.alibaba.dubbo.remoting.buffer.ChannelBuffers.dynamicBuffer(
                             size > bufferSize ? size : bufferSize);
+                    // 将 上次的数据读入 message 中
                     message.writeBytes(buffer, buffer.readableBytes());
+                    // 将这次的数据读入 message 中
                     message.writeBytes(input.toByteBuffer());
                 }
             } else {
@@ -131,29 +135,29 @@ final class NettyCodecAdapter {
                 do {
                     saveReaderIndex = message.readerIndex();
                     try {
-                        msg = codec.decode(channel, message);                   // DubboCountCodec
+                        msg = codec.decode(channel, message);                   // DubboCountCodec, ExchangeCodec
                     } catch (IOException e) {
                         buffer = com.alibaba.dubbo.remoting.buffer.ChannelBuffers.EMPTY_BUFFER;
                         throw e;
                     }
-                    if (msg == Codec2.DecodeResult.NEED_MORE_INPUT) {
-                        message.readerIndex(saveReaderIndex);
-                        break;
+                    if (msg == Codec2.DecodeResult.NEED_MORE_INPUT) {           // 数据包不完整
+                        message.readerIndex(saveReaderIndex);                   // 设置一下 ChannelBuffer 这次读的位置, 以便于下次再从这里开始读取
+                        break;                                                  // 解析数据终止, break 跳出 loop, 不然的话, 通过 Channels.fireMessageReceived 激活 处理链中的上游 ChannelHandler
                     } else {
-                        if (saveReaderIndex == message.readerIndex()) {
+                        if (saveReaderIndex == message.readerIndex()) {         // 若上次记录的 readIndex 与 现在 ChannelBuffer.readIndex 不同, 则说明数据被动过了
                             buffer = com.alibaba.dubbo.remoting.buffer.ChannelBuffers.EMPTY_BUFFER;
                             throw new IOException("Decode without read data.");
                         }
                         if (msg != null) {
-                            Channels.fireMessageReceived(ctx, msg, event.getRemoteAddress());
+                            Channels.fireMessageReceived(ctx, msg, event.getRemoteAddress());  // 从下游节点向上激活上游节点的 messageReceived 事件
                         }
                     }
                 } while (message.readable());
             } finally {
-                if (message.readable()) {
-                    message.discardReadBytes();
-                    buffer = message;
-                } else {
+                if (message.readable()) {        // 说明这次请求还有剩余下来没处理的字节
+                    message.discardReadBytes();  // 丢弃已经读取了的 数据
+                    buffer = message;            // 将这次读取过程中剩余下来的 字节赋值给 buffer
+                } else { // 重新构建堆缓存区域
                     buffer = com.alibaba.dubbo.remoting.buffer.ChannelBuffers.EMPTY_BUFFER;
                 }
                 NettyChannel.removeChannelIfDisconnected(ctx.getChannel());

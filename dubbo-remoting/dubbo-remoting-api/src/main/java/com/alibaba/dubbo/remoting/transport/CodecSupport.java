@@ -63,10 +63,10 @@ public class CodecSupport {
                 url.getParameter(Constants.SERIALIZATION_KEY, Constants.DEFAULT_REMOTING_SERIALIZATION));
     }
 
-    public static Serialization getSerialization(URL url, Byte id) {
+    public static Serialization getSerialization(URL url, Byte id) {  // 获取消息序列化的类型
         Serialization result = getSerializationById(id);
         if (result == null) {
-            result = getSerialization(url);
+            result = getSerialization(url);     // 获取默认的序列化协议
         }
         return result;
     }

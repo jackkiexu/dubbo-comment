@@ -35,22 +35,22 @@ public final class DubboCountCodec implements Codec2 {
 
     private DubboCodec codec = new DubboCodec();
 
-    public void encode(Channel channel, ChannelBuffer buffer, Object msg) throws IOException {
+    public void encode(Channel channel, ChannelBuffer buffer, Object msg) throws IOException { // dubbo 中 编码器
         codec.encode(channel, buffer, msg);                                 // DubboCodec
     }
 
-    public Object decode(Channel channel, ChannelBuffer buffer) throws IOException {
+    public Object decode(Channel channel, ChannelBuffer buffer) throws IOException {  //  dubbo 中的解码器
         int save = buffer.readerIndex();
         MultiMessage result = MultiMessage.create();
         do {
             Object obj = codec.decode(channel, buffer);                         // DubboCodec
-            if (Codec2.DecodeResult.NEED_MORE_INPUT == obj) {
+            if (Codec2.DecodeResult.NEED_MORE_INPUT == obj) {                   // 返回值若是 NEED_MORE_INPUT, 则表示 解码没成功, 要么是包不完整
                 buffer.readerIndex(save);
                 break;
             } else {
-                result.addMessage(obj);
-                logMessageLength(obj, buffer.readerIndex() - save);
-                save = buffer.readerIndex();
+                result.addMessage(obj);                                         // 将数据包加入到 通过迭代器模式设计的一个集合中
+                logMessageLength(obj, buffer.readerIndex() - save);             // 更新数据包的大小
+                save = buffer.readerIndex();                                    // 更新这次读取后, 数据读取的位置
             }
         } while (true);
         if (result.isEmpty()) {
@@ -62,21 +62,21 @@ public final class DubboCountCodec implements Codec2 {
         return result;
     }
 
-    private void logMessageLength(Object result, int bytes) {
+    private void logMessageLength(Object result, int bytes) { // 更新数据包大小
         if (bytes <= 0) {
             return;
         }
         if (result instanceof Request) {
             try {
                 ((RpcInvocation) ((Request) result).getData()).setAttachment(
-                        Constants.INPUT_KEY, String.valueOf(bytes));
+                        Constants.INPUT_KEY, String.valueOf(bytes));   // 设置 Request 的数据包大小
             } catch (Throwable e) {
                 /* ignore */
             }
         } else if (result instanceof Response) {
             try {
                 ((RpcResult) ((Response) result).getResult()).setAttachment(
-                        Constants.OUTPUT_KEY, String.valueOf(bytes));
+                        Constants.OUTPUT_KEY, String.valueOf(bytes));  // 设置 Response 的数据包大小
             } catch (Throwable e) {
                 /* ignore */
             }

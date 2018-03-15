@@ -224,6 +224,7 @@ public class GenericServiceTest {
             user.setName("zhangsan");
             List<User> users = new ArrayList<User>();
             users.add(user);
+            /// 下面这个才是真正重要的
             Object result = genericService.$invoke("getUsers", new String[]{ReflectUtils.getName(List.class)}, new Object[]{JavaBeanSerializeUtil.serialize(users, JavaBeanAccessor.METHOD)});
             Assert.assertTrue(result instanceof JavaBeanDescriptor);
             JavaBeanDescriptor descriptor = (JavaBeanDescriptor) result;

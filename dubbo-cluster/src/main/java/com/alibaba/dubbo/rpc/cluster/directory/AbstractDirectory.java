@@ -63,19 +63,19 @@ public abstract class AbstractDirectory<T> implements Directory<T> {
             throw new IllegalArgumentException("url == null");
         this.url = url;
         this.consumerUrl = consumerUrl;
-        setRouters(routers);
+        setRouters(routers);  // 设置默认的 mock 选择器
     }
 
     public List<Invoker<T>> list(Invocation invocation) throws RpcException {
         if (destroyed) {
             throw new RpcException("Directory already destroyed .url: " + getUrl());
         }
-        List<Invoker<T>> invokers = doList(invocation);
+        List<Invoker<T>> invokers = doList(invocation);             // 获取 RpcInvocation 对应的 Invoker
         List<Router> localRouters = this.routers; // local reference
-        if (localRouters != null && localRouters.size() > 0) {
-            for (Router router : localRouters) {
+        if (localRouters != null && localRouters.size() > 0) {      // 通过路由器进行选择
+            for (Router router : localRouters) {                    // 默认是 MockInvokerSelector  <- mock 类型的 invoker 选择器
                 try {
-                    if (router.getUrl() == null || router.getUrl().getParameter(Constants.RUNTIME_KEY, true)) {
+                    if (router.getUrl() == null || router.getUrl().getParameter(Constants.RUNTIME_KEY, true)) { // router 是否在运行
                         invokers = router.route(invokers, getConsumerUrl(), invocation);
                     }
                 } catch (Throwable t) {
@@ -98,13 +98,13 @@ public abstract class AbstractDirectory<T> implements Directory<T> {
         // copy list
         routers = routers == null ? new ArrayList<Router>() : new ArrayList<Router>(routers);
         // append url router
-        String routerkey = url.getParameter(Constants.ROUTER_KEY);
+        String routerkey = url.getParameter(Constants.ROUTER_KEY);  //  根据 ROUTER 从 URL 中获取对应数据
         if (routerkey != null && routerkey.length() > 0) {
             RouterFactory routerFactory = ExtensionLoader.getExtensionLoader(RouterFactory.class).getExtension(routerkey);
             routers.add(routerFactory.getRouter(url));
         }
         // append mock invoker selector
-        routers.add(new MockInvokersSelector());
+        routers.add(new MockInvokersSelector());  // 追加默认的 mock invoker
         Collections.sort(routers);
         this.routers = routers;
     }

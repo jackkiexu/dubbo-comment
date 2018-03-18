@@ -150,7 +150,7 @@ public final class URL implements Serializable {
                 && password != null && password.length() > 0) {
             throw new IllegalArgumentException("Invalid url, password without username!");
         }
-        this.protocol = protocol;
+        this.protocol = protocol;           //  URL 的协议设置, 比如 consumer, registry, provider
         this.username = username;
         this.password = password;
         this.host = host;
@@ -165,7 +165,7 @@ public final class URL implements Serializable {
         } else {
             parameters = new HashMap<String, String>(parameters);
         }
-        this.parameters = Collections.unmodifiableMap(parameters);
+        this.parameters = Collections.unmodifiableMap(parameters);  // 参数设置, 比如方法名就是参数
     }
 
     /**
@@ -186,14 +186,14 @@ public final class URL implements Serializable {
         int port = 0;
         String path = null;
         Map<String, String> parameters = null;
-        int i = url.indexOf("?"); // seperator between body and parameters 
+        int i = url.indexOf("?"); // seperator between body and parameters  用 ? 来进行分割, ? 号后面就是常见的一些配置信息
         if (i >= 0) {
-            String[] parts = url.substring(i + 1).split("\\&");
+            String[] parts = url.substring(i + 1).split("\\&");         //  ? 后面的参数通过 & 来进行拼接
             parameters = new HashMap<String, String>();
             for (String part : parts) {
                 part = part.trim();
                 if (part.length() > 0) {
-                    int j = part.indexOf('=');
+                    int j = part.indexOf('=');                          // key 与 value 进行分割是通过 "="  <-- 这里其实可以考虑 1对多的情况(1个 key 对应多个value, 这个可以参考 Spring 里面的 LinkedMultiValueMap)
                     if (j >= 0) {
                         parameters.put(part.substring(0, j), part.substring(j + 1));
                     } else {
@@ -203,14 +203,14 @@ public final class URL implements Serializable {
             }
             url = url.substring(0, i);
         }
-        i = url.indexOf("://");
+        i = url.indexOf("://");     // 以 "://" 为分割, 获取前面的字符串(字符串是 protocol)
         if (i >= 0) {
             if (i == 0) throw new IllegalStateException("url missing protocol: \"" + url + "\"");
             protocol = url.substring(0, i);
             url = url.substring(i + 3);
         } else {
             // case: file:/path/to/file.txt
-            i = url.indexOf(":/");
+            i = url.indexOf(":/");  // 以 ":/" 为分割, 获取前面的字符串(字符串就是 protocol)
             if (i >= 0) {
                 if (i == 0) throw new IllegalStateException("url missing protocol: \"" + url + "\"");
                 protocol = url.substring(0, i);
@@ -218,12 +218,12 @@ public final class URL implements Serializable {
             }
         }
 
-        i = url.indexOf("/");
+        i = url.indexOf("/");                           // 这时 url 就是去除 protocol:// 后的字符串
         if (i >= 0) {
-            path = url.substring(i + 1);
+            path = url.substring(i + 1);                // 根据第一个 "/" 来获取 path 路径
             url = url.substring(0, i);
         }
-        i = url.indexOf("@");
+        i = url.indexOf("@");                           // 这里 url 其实就是 host:port
         if (i >= 0) {
             username = url.substring(0, i);
             int j = username.indexOf(":");
@@ -233,12 +233,12 @@ public final class URL implements Serializable {
             }
             url = url.substring(i + 1);
         }
-        i = url.indexOf(":");
-        if (i >= 0 && i < url.length() - 1) {
+        i = url.indexOf(":");                           // 通过 ":" 来进行分割, 获取 host 与 port
+         if (i >= 0 && i < url.length() - 1) {
             port = Integer.parseInt(url.substring(i + 1));
             url = url.substring(0, i);
         }
-        if (url.length() > 0) host = url;
+        if (url.length() > 0) host = url;               // 最后组装成 URL
         return new URL(protocol, username, password, host, port, path, parameters);
     }
 
@@ -1214,12 +1214,12 @@ public final class URL implements Serializable {
         String inf = getServiceInterface();
         if (inf == null) return null;
         StringBuilder buf = new StringBuilder();
-        String group = getParameter(Constants.GROUP_KEY);
+        String group = getParameter(Constants.GROUP_KEY);  // 获取 group 对应的数据
         if (group != null && group.length() > 0) {
             buf.append(group).append("/");
         }
         buf.append(inf);
-        String version = getParameter(Constants.VERSION_KEY);
+        String version = getParameter(Constants.VERSION_KEY);  // 获取 url 中的 version
         if (version != null && version.length() > 0) {
             buf.append(":").append(version);
         }
@@ -1239,7 +1239,7 @@ public final class URL implements Serializable {
         return getServiceInterface();
     }
 
-    public String getServiceInterface() {
+    public String getServiceInterface() {  // 若找不到 interface, 则拿取 path
         return getParameter(Constants.INTERFACE_KEY, path);
     }
 

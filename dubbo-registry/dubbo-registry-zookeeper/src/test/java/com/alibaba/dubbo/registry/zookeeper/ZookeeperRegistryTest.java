@@ -31,8 +31,7 @@ public class ZookeeperRegistryTest {
 
     String service = "com.alibaba.dubbo.test.injvmServie";
     URL registryUrl = URL.valueOf("zookeeper://239.255.255.255/");
-    URL serviceUrl = URL.valueOf("zookeeper://zookeeper/" + service
-            + "?notify=false&methods=test1,test2");
+    URL serviceUrl =  URL.valueOf("zookeeper://zookeeper/" + service + "?notify=false&methods=test1,test2");
     URL consumerUrl = URL.valueOf("zookeeper://consumer/" + service + "?notify=false&methods=test1,test2");
     // ZookeeperRegistry registry    = new ZookeeperRegistry(registryUrl);
 

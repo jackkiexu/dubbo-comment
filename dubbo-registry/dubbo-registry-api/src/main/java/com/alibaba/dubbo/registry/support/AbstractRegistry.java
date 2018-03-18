@@ -71,7 +71,7 @@ public abstract class AbstractRegistry implements Registry {
     private final boolean syncSaveFile;
     private final AtomicLong lastCacheChanged = new AtomicLong();
     private final Set<URL> registered = new ConcurrentHashSet<URL>();
-    private final ConcurrentMap<URL, Set<NotifyListener>> subscribed = new ConcurrentHashMap<URL, Set<NotifyListener>>();
+    private final ConcurrentMap<URL, Set<NotifyListener>> subscribed = new ConcurrentHashMap<URL, Set<NotifyListener>>();   // 已经订阅的 URL
     private final ConcurrentMap<URL, Map<String, List<URL>>> notified = new ConcurrentHashMap<URL, Map<String, List<URL>>>();
     private URL registryUrl;
     // 本地磁盘缓存文件
@@ -295,15 +295,15 @@ public abstract class AbstractRegistry implements Registry {
         if (logger.isInfoEnabled()) {
             logger.info("Subscribe: " + url);
         }
-        Set<NotifyListener> listeners = subscribed.get(url);
-        if (listeners == null) {
+        Set<NotifyListener> listeners = subscribed.get(url);  // 根据 订阅的 URL 获取对应的 NotifyListener
+        if (listeners == null) {                              // 若 url 暂且没有 NotifyListener 进行监听, 则新构建一个 ConcurrentHashSet 用于存放
             subscribed.putIfAbsent(url, new ConcurrentHashSet<NotifyListener>());
             listeners = subscribed.get(url);
         }
-        listeners.add(listener);
+        listeners.add(listener);  // 将 NotifyListener 加入 ConcurrentHashSet 中
     }
 
-    public void unsubscribe(URL url, NotifyListener listener) {
+    public void unsubscribe(URL url, NotifyListener listener) { // 取消
         if (url == null) {
             throw new IllegalArgumentException("unsubscribe url == null");
         }
@@ -313,7 +313,7 @@ public abstract class AbstractRegistry implements Registry {
         if (logger.isInfoEnabled()) {
             logger.info("Unsubscribe: " + url);
         }
-        Set<NotifyListener> listeners = subscribed.get(url);
+        Set<NotifyListener> listeners = subscribed.get(url);  // 从已经订阅的 subscribed 中进行删除 NotifyListener
         if (listeners != null) {
             listeners.remove(listener);
         }

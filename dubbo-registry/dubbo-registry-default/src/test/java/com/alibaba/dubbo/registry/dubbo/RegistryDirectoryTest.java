@@ -66,8 +66,8 @@ public class RegistryDirectoryTest {
     }
 
     private RegistryDirectory getRegistryDirectory(URL url) {
-        RegistryDirectory registryDirectory = new RegistryDirectory(URL.class, url);
-        registryDirectory.setProtocol(protocol);
+        RegistryDirectory registryDirectory = new RegistryDirectory(URL.class, url);  // 构建 RegistryDirectory, 其中有将 url 解析成 method, version, 等等参数
+        registryDirectory.setProtocol(protocol);            // 设置 protocol
         // asert empty
         List invokers = registryDirectory.list(invocation);
         Assert.assertEquals(0, invokers.size());
@@ -244,9 +244,9 @@ public class RegistryDirectoryTest {
         List<URL> serviceUrls = new ArrayList<URL>();
         serviceUrls.add(SERVICEURL.addParameter("methods", "getXXX1"));
         serviceUrls.add(SERVICEURL2.addParameter("methods", "getXXX1,getXXX2"));
-        serviceUrls.add(SERVICEURL2.addParameter("methods", "getXXX1,getXXX2"));
+        serviceUrls.add(SERVICEURL2.addParameter("methods", "getXXX1,getXXX2")); // 这里 SERVICEURL2 每次 addParameter 后都会生成一个新的 URL
 
-        registryDirectory.notify(serviceUrls);
+        registryDirectory.notify(serviceUrls);          // 这里将触发 Invoker 的生成
         Assert.assertEquals(true, registryDirectory.isAvailable());
 
         invocation = new RpcInvocation();
@@ -255,7 +255,7 @@ public class RegistryDirectoryTest {
         Assert.assertEquals(2, invokers.size());
 
         invocation.setMethodName("getXXX");
-        invokers = registryDirectory.list(invocation);
+        invokers = registryDirectory.list(invocation);      // 通过 RpcInvocation 获取 需要的 invoker, 其中设计路由
         Assert.assertEquals(2, invokers.size());
 
         invocation.setMethodName("getXXX1");

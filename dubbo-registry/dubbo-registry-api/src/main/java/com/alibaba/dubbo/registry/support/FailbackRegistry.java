@@ -99,7 +99,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
         return failedNotified;
     }
 
-    private void addFailedSubscribed(URL url, NotifyListener listener) {
+    private void addFailedSubscribed(URL url, NotifyListener listener) {  // 将订阅失败的 url, 加入到 failedSubscribed 中
         Set<NotifyListener> listeners = failedSubscribed.get(url);
         if (listeners == null) {
             failedSubscribed.putIfAbsent(url, new ConcurrentHashSet<NotifyListener>());
@@ -109,15 +109,15 @@ public abstract class FailbackRegistry extends AbstractRegistry {
     }
 
     private void removeFailedSubscribed(URL url, NotifyListener listener) {
-        Set<NotifyListener> listeners = failedSubscribed.get(url);
+        Set<NotifyListener> listeners = failedSubscribed.get(url); // 根据 订阅失败的 url 获取 NotifyListener进行删除
         if (listeners != null) {
             listeners.remove(listener);
         }
-        listeners = failedUnsubscribed.get(url);
+        listeners = failedUnsubscribed.get(url); // 根据 订阅失败的 url 获取 NotifyListener进行删除
         if (listeners != null) {
             listeners.remove(listener);
         }
-        Map<NotifyListener, List<URL>> notified = failedNotified.get(url);
+        Map<NotifyListener, List<URL>> notified = failedNotified.get(url); // 根据 订阅失败的 url 获取 NotifyListener进行删除
         if (notified != null) {
             notified.remove(listener);
         }
@@ -141,7 +141,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             boolean check = getUrl().getParameter(Constants.CHECK_KEY, true)
                     && url.getParameter(Constants.CHECK_KEY, true)
                     && !Constants.CONSUMER_PROTOCOL.equals(url.getProtocol());
-            boolean skipFailback = t instanceof SkipFailbackWrapperException;
+            boolean skipFailback = t instanceof SkipFailbackWrapperException;  // 并且不是 consumer
             if (check || skipFailback) {
                 if (skipFailback) {
                     t = t.getCause();
@@ -208,7 +208,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
                 logger.error("Failed to subscribe " + url + ", Using cached list: " + urls + " from cache file: " + getUrl().getParameter(Constants.FILE_KEY, System.getProperty("user.home") + "/dubbo-registry-" + url.getHost() + ".cache") + ", cause: " + t.getMessage(), t);
             } else {
                 // 如果开启了启动时检测，则直接抛出异常
-                boolean check = getUrl().getParameter(Constants.CHECK_KEY, true)
+                boolean check = getUrl().getParameter(Constants.CHECK_KEY, true)  // 从 url 中获取检测参数, 默认 true
                         && url.getParameter(Constants.CHECK_KEY, true);
                 boolean skipFailback = t instanceof SkipFailbackWrapperException;
                 if (check || skipFailback) {
@@ -231,8 +231,8 @@ public abstract class FailbackRegistry extends AbstractRegistry {
         if (destroyed.get()){
             return;
         }
-        super.unsubscribe(url, listener);
-        removeFailedSubscribed(url, listener);
+        super.unsubscribe(url, listener);       // 调用父类 AbstractRegistry, 从 subscribed 中删除
+        removeFailedSubscribed(url, listener);  // 从 failedSubscribed, failedUnsubscribed, failedNotified 中进行删除  监听 "url" 的 listener
         try {
             // 向服务器端发送取消订阅请求
             doUnsubscribe(url, listener);
@@ -240,7 +240,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             Throwable t = e;
 
             // 如果开启了启动时检测，则直接抛出异常
-            boolean check = getUrl().getParameter(Constants.CHECK_KEY, true)
+            boolean check = getUrl().getParameter(Constants.CHECK_KEY, true)  // 判断是否开启检测机制
                     && url.getParameter(Constants.CHECK_KEY, true);
             boolean skipFailback = t instanceof SkipFailbackWrapperException;
             if (check || skipFailback) {
@@ -253,7 +253,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             }
 
             // 将失败的取消订阅请求记录到失败列表，定时重试
-            Set<NotifyListener> listeners = failedUnsubscribed.get(url);
+            Set<NotifyListener> listeners = failedUnsubscribed.get(url);  // 在 failedUnsubscribed 中加入 监听 url 的 NotifyListener
             if (listeners == null) {
                 failedUnsubscribed.putIfAbsent(url, new ConcurrentHashSet<NotifyListener>());
                 listeners = failedUnsubscribed.get(url);

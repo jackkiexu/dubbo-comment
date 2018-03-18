@@ -322,13 +322,13 @@ public final class StringUtils {
      * @return key-value map;
      */
     private static Map<String, String> parseKeyValuePair(String str, String itemSeparator) {
-        String[] tmp = str.split(itemSeparator);
+        String[] tmp = str.split(itemSeparator);               // 通过 & 符号进行分割
         Map<String, String> map = new HashMap<String, String>(tmp.length);
         for (int i = 0; i < tmp.length; i++) {
             Matcher matcher = KVP_PATTERN.matcher(tmp[i]);
             if (matcher.matches() == false)
                 continue;
-            map.put(matcher.group(1), matcher.group(2));
+            map.put(matcher.group(1), matcher.group(2)); // 将 = 号两端的数据放入 map 中
         }
         return map;
     }
@@ -344,7 +344,7 @@ public final class StringUtils {
      * @param qs query string.
      * @return Parameters instance.
      */
-    public static Map<String, String> parseQueryString(String qs) {
+    public static Map<String, String> parseQueryString(String qs) {  // 解析查询的 参数
         if (qs == null || qs.length() == 0)
             return new HashMap<String, String>();
         return parseKeyValuePair(qs, "\\&");

@@ -61,7 +61,7 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
     }
 
     public AbstractInvoker(Class<T> type, URL url, String[] keys) {
-        this(type, url, convertAttachment(url, keys));
+        this(type, url, convertAttachment(url, keys));   // 将 url 中的参数转换成 attachment
     }
 
     public AbstractInvoker(Class<T> type, URL url, Map<String, String> attachment) {

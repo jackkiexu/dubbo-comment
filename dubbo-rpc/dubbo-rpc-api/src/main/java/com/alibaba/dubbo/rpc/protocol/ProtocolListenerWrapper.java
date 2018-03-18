@@ -59,7 +59,7 @@ public class ProtocolListenerWrapper implements Protocol {
     }
 
     public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
-        if (Constants.REGISTRY_PROTOCOL.equals(url.getProtocol())) {
+        if (Constants.REGISTRY_PROTOCOL.equals(url.getProtocol())) {    // 若是注册类型到协议, 则不使用包装器
             return protocol.refer(type, url);
         }
         return new ListenerInvokerWrapper<T>(protocol.refer(type, url),

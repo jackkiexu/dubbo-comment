@@ -378,7 +378,7 @@ public class DubboProtocol extends AbstractProtocol { // 这个 Dubbo 其实在�
         ExchangeClient client;
         try {
             //设置连接应该是lazy的 
-            if (url.getParameter(Constants.LAZY_CONNECT_KEY, false)) {
+            if (url.getParameter(Constants.LAZY_CONNECT_KEY, false)) {  // lazy 懒建立连接
                 client = new LazyConnectExchangeClient(url, requestHandler);
             } else {
                 client = Exchangers.connect(url, requestHandler);

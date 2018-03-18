@@ -45,7 +45,7 @@ public class ProtocolFilterWrapper implements Protocol {
     }
 
     private static <T> Invoker<T> buildInvokerChain(final Invoker<T> invoker, String key, String group) {
-        Invoker<T> last = invoker;
+        Invoker<T> last = invoker;  // 获取所有的 Filter
         List<Filter> filters = ExtensionLoader.getExtensionLoader(Filter.class).getActivateExtension(invoker.getUrl(), key, group);
         /** provider 默认是 ExceptionFilter -> TimeoutFilter -> TraceFilter -> ContextFilter -> GenericFilter -> ClassLoaderFilter -> EchoFilter -> AbstractProxytInvoker
          *  consumer 默认是 ConsumerContextFilter -> FutureFilter -> DubboInvoker
@@ -98,7 +98,7 @@ public class ProtocolFilterWrapper implements Protocol {
     }
 
     public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
-        if (Constants.REGISTRY_PROTOCOL.equals(url.getProtocol())) {
+        if (Constants.REGISTRY_PROTOCOL.equals(url.getProtocol())) {        // 若是 registry 则直接返回
             return protocol.refer(type, url);                               // 这里返回 FailoverClusterInvoker
         }
         return buildInvokerChain(protocol.refer(type, url), Constants.REFERENCE_FILTER_KEY, Constants.CONSUMER);

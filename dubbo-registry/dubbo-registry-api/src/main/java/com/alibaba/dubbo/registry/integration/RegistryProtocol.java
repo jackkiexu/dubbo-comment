@@ -57,7 +57,7 @@ public class RegistryProtocol implements Protocol {
     private final Map<String, ExporterChangeableWrapper<?>> bounds = new ConcurrentHashMap<String, ExporterChangeableWrapper<?>>();
     private Cluster cluster;                        // 下面几个类是 Dubbo 的 ioc 机制获取 Bean 时, 注入进去的
     private Protocol protocol;                      // 默认 DubboProtocol
-    private RegistryFactory registryFactory;
+    private RegistryFactory registryFactory;        // 根据 URL 获取对应的Registry
     private ProxyFactory proxyFactory;
 
     public RegistryProtocol() {

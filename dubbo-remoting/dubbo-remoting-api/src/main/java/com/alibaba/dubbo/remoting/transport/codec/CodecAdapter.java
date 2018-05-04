@@ -28,6 +28,7 @@ import java.io.IOException;
 
 /**
  * @author <a href="mailto:gang.lvg@alibaba-inc.com">kimi</a>
+ * 对象适配器
  */
 public class CodecAdapter implements Codec2 {
 
